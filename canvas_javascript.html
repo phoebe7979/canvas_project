@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>Canvas Assingment with Javascript</title>
+</head>
+<body onload="startGame()">
+<script>
+var gamePiece;
+
+function startGame(){
+  gameArea.start();
+  gamePiece = new component(10, "red",400,250)
+}
+function updateGameArea(){
+  gamePiece.speedX = 0;
+  gamePiece.speedY = 0;
+  gamePiece.sizeChange = 0;
+  if (gameArea.x && gameArea.y) {gamePiece.x = gameArea.x;gamePiece.y = gameArea.y; }
+  if (gameArea.key && gameArea.key == 38) {gamePiece.sizeChange = 1; }
+  if (gameArea.key && gameArea.key == 40) {gamePiece.sizeChange = -1; }
+  if (gameArea.key && gameArea.key == 66) {gamePiece.color = "blue"; }
+  if (gameArea.key && gameArea.key == 71) {gamePiece.color = "green"; }
+  if (gameArea.key && gameArea.key == 82) {gamePiece.color = "red"; }
+  if (gameArea.key && gameArea.key == 89) {gamePiece.color = "yellow"; }
+  if (gameArea.key && gameArea.key == 32) {gameArea.clear(); }
+  gamePiece.newSize();
+  gamePiece.update();
+
+
+}
+
+var gameArea = {
+  canvas : document.createElement("canvas"),
+  clear : function() {
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+},
+  start : function(){
+    this.canvas.width=800;
+    this.canvas.height=500;
+    this.canvas.style= "border:1px solid #000000";
+    this.context = this.canvas.getContext("2d");
+    document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+    this.interval = setInterval(updateGameArea, 2);
+    window.addEventListener('mousemove', function (e) {
+    gameArea.x = e.pageX;
+    gameArea.y = e.pageY;
+    })
+    window.addEventListener('keydown', function (e) {
+            gameArea.key = e.keyCode;
+        })
+    window.addEventListener('keyup', function (e) {
+            gameArea.key = false;
+        })
+  }
+}
+
+function component(radius, color, x, y) {
+    this.r = radius;
+    this.x = x;
+    this.y = y;
+    this.speedX = 0;
+    this.speedY = 0;
+    this.sizeChange = 0;
+    this.color = color;
+    this.update = function(){
+      ctx = gameArea.context;
+      ctx.beginPath();
+      ctx.fillStyle = this.color;
+      ctx.arc(this.x, this.y,this.r, 0, 2*Math.PI);
+      ctx.fill()
+    }
+    this.newSize = function(){
+      this.r += this.sizeChange;
+      if (this.r <= 0) {this.r = 1;};
+    }
+
+
+}
+
+</script>
+</body>
+
+</html>
